@@ -1,0 +1,7 @@
+Example
+-- UUID of customer  
+get from web like http://w-hat.com/name2key?name=davidbeer.beery
+-- Payment amount, only numbers
+-------------------------- Start below ----------------------------
+2c291123-2048-4939-ae9b-873e5a75ca6c
+3000

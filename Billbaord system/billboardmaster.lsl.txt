@@ -1,0 +1,96 @@
+//How to?
+//Make a notecard name slaves, list UUID of each object, line by line
+//Add textures into object, use slave script to change rotation time
+//After Adding new textures please click reset
+integer channel;
+key notecardQueryId;
+integer notecardLine;
+string myinventorynew;
+list slaves;
+//Change notecard name if needed
+string notecardName = "slaves";
+//Do not edit rest
+list getinventorynames()
+{
+ 
+    integer counter;//the counter
+    integer inventorylength = llGetInventoryNumber(INVENTORY_TEXTURE);//this will get the number of items in inventory
+    list listofinventorynames;//where the inventory name will be stored
+    //string scriptname = llGetScriptName();//the name of this script...better to call it once here
+    do
+    {
+        string inventoryname = llGetInventoryKey(llGetInventoryName(INVENTORY_TEXTURE,counter));
+        //if(inventoryname != scriptname)//make sure this script isn't added into the list...optional
+        listofinventorynames += inventoryname;//add inventory name to the list
+    }while(++counter < inventorylength);
+    return listofinventorynames;
+}
+ 
+list myinventory;
+
+//End of globals and fuctions 
+
+
+default
+{
+    state_entry()
+    {
+        myinventory = getinventorynames();
+      myinventorynew = llList2CSV( myinventory);
+        
+     channel = (integer)llFrand(10000.55);  
+      if (llGetInventoryKey(notecardName) == NULL_KEY)
+        {
+            llOwnerSay( "Notecard missing or unwritten");
+            return;
+        }
+       
+        notecardQueryId = llGetNotecardLine(notecardName, notecardLine);   
+    
+    }
+      dataserver(key query_id, string data)
+    {
+        if (query_id == notecardQueryId)
+        {
+            if (data == EOF)
+                state sendupdate;
+            else
+            {
+                
+                ++notecardLine;
+                slaves= slaves + [data];
+                notecardQueryId = llGetNotecardLine(notecardName, notecardLine);
+            }
+        }
+    }
+
+   
+   
+}
+
+
+state sendupdate
+{
+ state_entry()
+ 
+    {
+         integer i;
+        integer length = llGetListLength(slaves);
+        do
+        {
+            
+             llEmail( llList2String(slaves, i)+"@lsl.secondlife.com", "",myinventorynew ); 
+           
+    }
+        while(++i < length);
+    }   
+
+ touch_start(integer total_number)
+    {
+          
+       llOwnerSay("Masters key "+(string)llGetKey());
+         
+        
+        
+    }
+}

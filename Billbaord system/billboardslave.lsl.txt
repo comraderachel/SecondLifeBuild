@@ -1,0 +1,71 @@
+//Time it changes between textures in seconds
+float time = 5;
+
+
+//start script - skip lower to change what display 
+string mes;
+integer current;
+default
+{
+    touch_start(integer total_number)
+    {
+      llOwnerSay("Slaves key "+(string)llGetKey()); 
+    }
+    state_entry()
+    {
+      llSetTimerEvent(10);
+    }
+
+    
+timer()
+{
+  llGetNextEmail("", "");    
+}
+email(string time, string address, string subj, string message, integer num_left)
+{
+    integer divide = llSubStringIndex(message, "\n\n");
+string header = llDeleteSubString(message, divide, -1);
+message = llDeleteSubString(message, 0, divide + 1);
+mes = message;
+ state show;
+}
+}
+state show
+{
+    touch_start(integer total_number)
+    {
+      llOwnerSay("Slaves key "+(string)llGetKey()); 
+    }
+ state_entry()
+ {
+  llSetTimerEvent(time);   
+}   
+ timer()
+ 
+{
+    
+ llGetNextEmail("", "");    
+ list display = [];
+display = llCSV2List(mes);   
+     integer size = llGetListLength( display );
+     
+     if (current == size)
+     {current = 0;} 
+     string currentkey = llList2String(display,current);
+     //   
+     //Here to change what face to display texture
+ //
+ llSetLinkTexture(LINK_THIS, currentkey, ALL_SIDES);
+ current = current +1;
+ 
+}   
+email(string time, string address, string subj, string message, integer num_left)
+{
+    integer divide = llSubStringIndex(message, "\n\n");
+string header = llDeleteSubString(message, divide, -1);
+message = llDeleteSubString(message, 0, divide + 1);
+mes = message;
+    
+    }    
+    
+}

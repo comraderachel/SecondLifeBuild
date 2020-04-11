@@ -1,0 +1,25 @@
+
+default
+{
+    state_entry()
+    {
+       llSetPayPrice(3000, [PAY_HIDE ,PAY_HIDE, PAY_HIDE, PAY_HIDE]);
+        llRequestPermissions(llGetOwner(), PERMISSION_DEBIT);
+         llSetClickAction( 3);
+          
+    }
+
+    touch_start(integer total_number)
+    {
+        llInstantMessage(llDetectedKey(0), "Please pay the Terminal");
+    }
+money(key id, integer amount) 
+{
+ string ownername = llKey2Name(llGetOwner());
+ string parcel = (string)llGetParcelDetails(llGetPos(), [PARCEL_DETAILS_NAME]);
+ llInstantMessage(id, "Thank you for your "+(string)amount+"L payment to "+ownername);
+ llInstantMessage(llGetOwner(),llKey2Name(id)+" Has made a payment of "+(string)amount+"L at "+parcel);   
+    
+    
+}
+}
